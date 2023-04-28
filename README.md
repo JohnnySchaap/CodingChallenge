@@ -10,7 +10,7 @@ Furthermore, we expect you to write the solution in such a way that you are prou
 It is important to note that we would like to see different skills. We don't want you to waste time on repetitive tasks. If you have proven that you can do it once or twice, we know you can do it multiple times (Just make sure you mention it with a comment in the code why you didn't do it. This shows that you have thought about it). 
 
 # The code
-This repository contains a simple web API that has some endpoints that are not (fully) implemented. You are free to do anything you like to the solution, except for changing the contracts and endpoints of the API (as we will be running some automated tests). <br/><br/>
+This repository contains a simple web API that has some endpoints that are not (fully) implemented. You are free to do anything you like to the solution, except for changing the contracts and endpoints of the API (as we will be running some automated tests).<br/><br/>
 
 Additionally, we have added some comments in the code indicating bugs or small challenge we would like to solve. Please leave the comment, but you can do anything underneath it to solve the bug. Additionally, please provide what you think the problem was and why you think your change solved it.<br/><br/>
 
@@ -19,30 +19,32 @@ Example: <br/>
 "// Answer: We are looping over the same array twice, while we could have done it once. Looping over it twice is neglectable, but still, looping once is faster."
 
 # Functional requirements
-I have a successful online ordering system where I sell products. 
-To promote my website even more I want to be able to give away coupons that can be applied to certain products by sending coupon codes over email.
-When those coupons are applied to a product, I want the product price to change based on how it is defined on the coupon.
+I have a successful online ordering system where I sell products.<br/>
+To promote my website even more I want to be able to give away coupons that can be applied to certain products by sending coupon codes over email.<br/>
+When those coupons are applied to a product, I want the product price to change based on how it is defined on the coupon.<br/><br/>
 
-For example: 
-I am selling toy cars for kids. Two of those cars have product code "TRUCK" and "AMBU" and they both cost €20.00. 
-I want to be able to create a coupon that can be applied to both products where I can set the price to €10.00 euro instead.
+For Example:<br/>
+I am selling toy cars for kids. Two of those cars have product code "TRUCK" and "AMBU" and they both cost €20.00.<br/> 
+I want to be able to create a coupon that can be applied to both products where I can set the price to €10.00 euro instead.<br/><br/>
 
-Furthermore, some coupons I am handing out can only be used once or a few times.
+Furthermore, some coupons I am handing out can only be used once or a few times.<br/><br/>
 
-For Example:
-If I have a coupon that can be applied on a product. This coupon is a one-time use coupon.
-As soon as an order comes in that contains this coupon, nobody else should be able to use the coupon again. 
+For Example:<br/>
+If I have a coupon that can be applied on a product. This coupon is a one-time use coupon.<br/>
+As soon as an order comes in that contains this coupon, nobody else should be able to use the coupon again.<br/><br/>
 
 # Technical Requirements
-You can assume that this service is hosted in an environment that is not public to the world. 
-However, everyone that is on the office network (through VPN) does have access. We don't want to make it to complex, so everyone that has an API key is allowed to hit the endpoint (if they are in the office).
+You can assume that this service is hosted in an environment that is not public to the world. <br/>
+However, everyone that is on the office network (through VPN) does have access.<br/>
+We don't want to make it to complex, so everyone that has an API key is allowed to hit the endpoint (if they are in the office).<br/><br/>
 
-My online ordering system is being used by quite a lot of users. This will mean that my service will scale and create extra nodes.
+My online ordering system is being used by quite a lot of users. This will mean that my service will scale and create extra nodes.<br/>
 We need to make sure that this will not lead to problems with limited-time use coupons.
 
 # Scope
-This service is part of a big system. You only have to think about this service and you don't have to worry about the other systems. 
-You can assume: 
+This service is part of a big system. You only have to think about this service and you don't have to worry about the other systems.<br/><br/>
+
+You can assume:<br/>
 1. Another service will call the endpoint to create a coupon before sending it to the customers as an email (The Email Service)
 2. Another service will call the coupon service and expose it to the front end (API Gateway)
 2. Another service will check if the product the coupon can be applied on is in their basket (The Pricing Service)
