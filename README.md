@@ -43,10 +43,11 @@ We need to make sure that this will not lead to problems with limited-time use c
 # Scope
 This service is part of a big system. You only have to think about this service and you don't have to worry about the other systems. 
 You can assume: 
-1. There is service that will call the coupon service and expose it to the front end.
-2. Another service will check if the product the coupon can be applied on is in their basket
-3. Another service will reject the order if a coupon is requested that cannot be used anymore.
-4. Another service will call this service when the use count needs to be update.
+1. Another service will call the endpoint to create a coupon before sending it to the customers as an email (The Email Service)
+2. Another service will call the coupon service and expose it to the front end (API Gateway)
+2. Another service will check if the product the coupon can be applied on is in their basket (The Pricing Service)
+3. Another service will reject the order if a coupon is requested that cannot be used anymore. (The Pricing Service)
+4. Another service will call this service when the use count needs to be update. (The Order Service)
 
 # Steps
 1. Analyze the functional requirements
