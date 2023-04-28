@@ -45,11 +45,12 @@ We need to make sure that this will not lead to problems with limited-time use c
 This service is part of a big system. You only have to think about this service and you don't have to worry about the other systems.<br/><br/>
 
 You can assume:<br/>
-1. Another service will call the endpoint to create a coupon before sending it to the customers as an email (The Email Service)
-2. Another service will call the coupon service and expose it to the front end (API Gateway)
-2. Another service will check if the product the coupon can be applied on is in their basket (The Pricing Service)
-3. Another service will reject the order if a coupon is requested that cannot be used anymore. (The Pricing Service)
-4. Another service will call this service when the use count needs to be update. (The Order Service)
+1. Another service will call the GET endpoint to retrieve the coupon and expose it to the front end (API Gateway)
+2. Another service will call the PUT endpoint to create a coupon before sending it to the customers as an email (The Email Service)
+3. Another service will call the PUT endpoint when the use count of a coupon needs to be updated. (The Order Service)
+4. Another service will check if the product the coupon can be applied on is in their basket. It will not call the Coupon service if the coupon is in the basket but no product to apply it to. (The Pricing Service)
+5. Another service will reject the order if a coupon is requested that cannot be used anymore. (The Pricing Service)
+6. Another service will update the price of the product when the coupon is applied. (The Pricing Service)
 
 # Steps
 1. Analyze the functional requirements
