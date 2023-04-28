@@ -53,11 +53,12 @@ You can assume:<br/>
 6. Another service will update the price of the product when the coupon is applied. (The Pricing Service)
 
 # Steps
-1. Analyze the functional requirements
-2. Analyze the existing code
-3. Come up with an idea on how you want to structure your code (again, as long as the endpoints and contracts remain the same, you can do anything)
-4. Implement a solution that will satisfy the functional requirements
-5. Search for all "// TODO" in the code and solve them
-6. Provide a document to describe:
+1. Analyze the functional & Technical requirements
+2. Analyze the scope
+3. Analyze the existing code
+4. Come up with an idea on how you want to structure your code (again, as long as the endpoints and contracts remain the same, you can do anything)
+5. Implement a solution that will satisfy the functional requirements
+6. Search for all "// TODO" in the code and solve them
+7. Provide a document to describe:
     1. Anything that you think needs clarifications on the provided solution.
     2. Anything that you would have done if you had more time.
