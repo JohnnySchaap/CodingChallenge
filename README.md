@@ -19,7 +19,34 @@ Example: <br/>
 "// Answer: We are looping over the same array twice, while we could have done it once. Looping over it twice is neglectable, but still, looping once is faster."
 
 # Functional requirements
-TODO
+I have a successful online ordering system where I sell products. 
+To promote my website even more I want to be able to give away coupons that can be applied to certain products by sending coupon codes over email.
+When those coupons are applied to a product, I want the product price to change based on how it is defined on the coupon.
+
+For example: 
+I am selling toy cars for kids. Two of those cars have product code "TRUCK" and "AMBU" and they both cost €20.00. 
+I want to be able to create a coupon that can be applied to both products where I can set the price to €10.00 euro instead.
+
+Furthermore, some coupons I am handing out can only be used once or a few times.
+
+For Example:
+If I have a coupon that can be applied on a product. This coupon is a one-time use coupon.
+As soon as an order comes in that contains this coupon, nobody else should be able to use the coupon again. 
+
+# Technical Requirements
+You can assume that this service is hosted in an environment that is not public to the world. 
+However, everyone that is on the office network (through VPN) does have access. We don't want to make it to complex, so everyone that has an API key is allowed to hit the endpoint (if they are in the office).
+
+My online ordering system is being used by quite a lot of users. This will mean that my service will scale and create extra nodes.
+We need to make sure that this will not lead to problems with limited-time use coupons.
+
+# Scope
+This service is part of a big system. You only have to think about this service and you don't have to worry about the other systems. 
+You can assume: 
+1. There is service that will call the coupon service and expose it to the front end.
+2. Another service will check if the product the coupon can be applied on is in their basket
+3. Another service will reject the order if a coupon is requested that cannot be used anymore.
+4. Another service will call this service when the use count needs to be update.
 
 # Steps
 1. Analyze the functional requirements
