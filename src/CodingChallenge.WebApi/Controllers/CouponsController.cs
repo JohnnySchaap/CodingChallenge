@@ -8,11 +8,11 @@ namespace CodingChallenge.WebApi.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class CouponController : ControllerBase
+public class CouponsController : ControllerBase
 {
-    private readonly ILogger<CouponController> _logger;
+    private readonly ILogger<CouponsController> _logger;
 
-    public CouponController(ILogger<CouponController> logger)
+    public CouponsController(ILogger<CouponsController> logger)
     {
         _logger = logger;
     }
@@ -58,7 +58,7 @@ public class CouponController : ControllerBase
         var httpClient = new HttpClient();
         foreach (var coupon in coupons)
         {
-            var url = $"https://localhost:{Request.Host.Port}/Coupon/{coupon.Id}";
+            var url = $"https://localhost:{Request.Host.Port}/Coupons/{coupon.Id}";
             var body = new StringContent(JsonSerializer.Serialize(coupon), Encoding.UTF8, MediaTypeNames.Application.Json);
 
             await httpClient.PutAsync(url, body);
