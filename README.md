@@ -12,7 +12,7 @@ It is important to note that we would like to see different skills. We don't wan
 # The code
 This repository contains a simple web API that has some endpoints that are not (fully) implemented. You are free to do anything you like to the solution, except for changing the contracts and endpoints of the API (as we will be running some automated tests).<br/><br/>
 
-Additionally, we have added some comments in the code indicating bugs or small challenge we would like to solve. Please leave the comment, but you can do anything underneath it to solve the bug. Additionally, please provide what you think the problem was and why you think your change solved it.<br/><br/>
+Additionally, we have added some comments in the code indicating bugs or small challenges we would like to solve. Please don't remove the comment, but you can do anything underneath it to solve the bug. Additionally, please provide what you think the problem was and why you think your change solved it.<br/><br/>
 
 Example: <br/>
 "// TODO-001: Challenge: Something is wrong with this code. What is it and how can you solve it"<br/>
@@ -24,8 +24,8 @@ To promote my website even more I want to be able to give away coupons that can 
 When those coupons are applied to a product, I want the product price to change based on how it is defined on the coupon.<br/><br/>
 
 For Example:<br/>
-I am selling toy cars for kids. Two of those cars have product code "TRUCK" and "AMBU" and they both cost €20.00.<br/> 
-I want to be able to create a coupon that can be applied to both products where I can set the price to €10.00 euro instead.<br/><br/>
+I am selling toy cars for kids. Two of those cars have product codes "TRUCK" and "AMBU" and they both cost ï¿½20.00.<br/> 
+I want to be able to create a coupon that can be applied to both products where I can set the price to ï¿½10.00 euro instead.<br/><br/>
 
 Furthermore, some coupons I am handing out can only be used once or a few times.<br/><br/>
 
@@ -33,13 +33,19 @@ For Example:<br/>
 If I have a coupon that can be applied on a product. This coupon is a one-time use coupon.<br/>
 As soon as an order comes in that contains this coupon, nobody else should be able to use the coupon again.<br/><br/>
 
-# Technical Requirements
+# Technical requirements
 You can assume that this service is hosted in an environment that is not public to the world. <br/>
 However, everyone that is on the office network (through VPN) does have access.<br/>
 We don't want to make it to complex, so everyone that has an API key is allowed to hit the endpoint (if they are in the office).<br/><br/>
 
 My online ordering system is being used by quite a lot of users. This will mean that my service will scale and create extra nodes.<br/>
-We need to make sure that this will not lead to problems with limited-time use coupons.
+We need to make sure that this will not lead to problems with limited-time use coupons.<br/><br/>
+
+Some implementation details:<br/>
+1. When MaxUsages is set to 0, it means that the coupon can be applied an infinite number of times.
+2. Usages can only be incremented / decremented by 1 at a time.
+3. The coupon code is unique and immutable once created.
+4. The coupon codes are case insensitive.
 
 # Scope
 This service is part of a big system. You only have to think about this service and you don't have to worry about the other systems.<br/><br/>
