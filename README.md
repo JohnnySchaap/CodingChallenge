@@ -1,5 +1,5 @@
 # Introduction
-Thank you for taking the time to do the coding challenge. The goal of the challenge is to assess your level of engineering seniority.<br/>
+Thank you for taking the time to do the coding challenge. The goal of the challenge is to assess your engineering skills.<br/>
 The base challenge should take you 2 hours, but we would like to encourage you to spend more time on it, so we can better assess your level.
 
 # What would we like to see
