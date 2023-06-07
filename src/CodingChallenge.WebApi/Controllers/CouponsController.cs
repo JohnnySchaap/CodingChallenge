@@ -18,21 +18,18 @@ public class CouponsController : ControllerBase
     }
 
     [HttpGet]
-    [Route("")]
     public async Task<ActionResult<Coupon>> GetCouponByCouponCode(string couponCode)
     {
-        return Ok(new Coupon(Guid.NewGuid(), "Name", "Description", couponCode, 10.1, 1, 1, new[] { "AA", "BB" }));
+        return Ok(new Coupon(Guid.NewGuid(), "Name", "Description", couponCode, 10.1m, 1, 1, new[] { "AA", "BB" }));
     }
 
-    [HttpGet]
-    [Route("{id}")]
+    [HttpGet("{id}")]
     public async Task<ActionResult<Coupon>> GetCoupon(Guid id)
     {
-        return Ok(new Coupon(id, "Name", "Description", "123", 10.1, 1, 1, new[] { "AA", "BB" }));
+        return Ok(new Coupon(id, "Name", "Description", "123", 10.1m, 1, 1, new[] { "AA", "BB" }));
     }
 
-    [HttpPut]
-    [Route("{id}")]
+    [HttpPut("{id}")]
     public async Task<ActionResult> CreateOrUpdateCoupon(Guid id, [FromBody] Coupon request)
     {
         return Ok();
@@ -50,21 +47,21 @@ public class CouponsController : ControllerBase
     /// </summary>
     [HttpGet]
     [Route("Test/[action]")]
-    public async Task<ActionResult> Populate()
+    public async Task Populate()
     {
         var data = await System.IO.File.ReadAllTextAsync(DataFileName);
         var coupons = JsonSerializer.Deserialize<List<Coupon>>(data);
-        
+
         var httpClient = new HttpClient();
         foreach (var coupon in coupons)
         {
-            var url = $"https://localhost:{Request.Host.Port}/Coupons/{coupon.Id}";
-            var body = new StringContent(JsonSerializer.Serialize(coupon), Encoding.UTF8, MediaTypeNames.Application.Json);
+            var url = Url.Action(nameof(CreateOrUpdateCoupon), "Coupons", new { id = coupon.Id }, HttpContext.Request.Scheme,
+                HttpContext.Request.Host.Value);
+            var body = new StringContent(JsonSerializer.Serialize(coupon), Encoding.UTF8,
+                MediaTypeNames.Application.Json);
 
             await httpClient.PutAsync(url, body);
         }
-
-        return Ok();
     }
 
     #endregion
