@@ -10,13 +10,6 @@ namespace CodingChallenge.WebApi.Controllers;
 [Route("[controller]")]
 public class CouponsController : ControllerBase
 {
-    private readonly ILogger<CouponsController> _logger;
-
-    public CouponsController(ILogger<CouponsController> logger)
-    {
-        _logger = logger;
-    }
-
     [HttpGet]
     public async Task<ActionResult<Coupon>> GetCouponByCouponCode(string couponCode)
     {
@@ -45,8 +38,7 @@ public class CouponsController : ControllerBase
     /// You can do it any other way you like. We did it like this so that you are not forced in any direction on how you will store your data.
     /// If you leave it like this, make sure you run this endpoint every time you start up though.
     /// </summary>
-    [HttpGet]
-    [Route("Test/[action]")]
+    [HttpGet("Test/[action]")]
     public async Task Populate()
     {
         var data = await System.IO.File.ReadAllTextAsync(DataFileName);
