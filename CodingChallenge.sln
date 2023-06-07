@@ -16,6 +16,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodingChallenge.WebApi", "s
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{3E2D7A40-2E93-40AE-9F51-BF0A11695A47}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodingChallenge.WebApi.Tests.Unit", "CodingChallenge.WebApi.Tests.Unit\CodingChallenge.WebApi.Tests.Unit.csproj", "{71041C4E-D2A9-49FA-895B-CF82951A39DE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,12 +28,17 @@ Global
 		{15F78A50-B36C-418B-A514-898F141A0C14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15F78A50-B36C-418B-A514-898F141A0C14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15F78A50-B36C-418B-A514-898F141A0C14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71041C4E-D2A9-49FA-895B-CF82951A39DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71041C4E-D2A9-49FA-895B-CF82951A39DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71041C4E-D2A9-49FA-895B-CF82951A39DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71041C4E-D2A9-49FA-895B-CF82951A39DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{15F78A50-B36C-418B-A514-898F141A0C14} = {26FF8300-A2CD-4AB2-84BD-24835A16E940}
+		{71041C4E-D2A9-49FA-895B-CF82951A39DE} = {3E2D7A40-2E93-40AE-9F51-BF0A11695A47}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C20F5133-80B6-4875-8763-020781FE14FF}

@@ -46,6 +46,7 @@ Some implementation details:<br/>
 2. Usages can only be incremented / decremented by 1 at a time.
 3. The coupon code is unique and immutable once created.
 4. The coupon codes are case insensitive.
+5. The Product Codes are case insensitive. 
 
 # Scope
 This service is part of a big system. You only have to think about this service and you don't have to worry about the other systems.<br/><br/>
