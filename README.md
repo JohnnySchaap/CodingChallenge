@@ -3,6 +3,8 @@ Thank you for taking the time to do the coding challenge. The goal of the challe
 The base challenge should take you 2 hours, but we would like to encourage you to spend more time on it, so we can better assess your level.
 If you are running out of time, please make sure that you write down what you would have done if you had more time. Even if you haven't finished, please submit the code you have written so far. We will still review it and provide feedback.
 
+When you submit your solution, please specify how much time you spent on your solution.
+
 # What would we like to see
 The coding challenge will test your skills to convert functional requirements into a technical solution, taking into account things that are not explicitly mentioned (just like a real life situation where the stakeholder does not exactly know what he/she wants).    
 
