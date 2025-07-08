@@ -1,6 +1,7 @@
 # Introduction
 Thank you for taking the time to do the coding challenge. The goal of the challenge is to assess your engineering skills.  
 The base challenge should take you 2 hours, but we would like to encourage you to spend more time on it, so we can better assess your level.
+If you are running out of time, please make sure that you write down what you would have done if you had more time. Even if you haven't finished, please submit the code you have written so far. We will still review it and provide feedback.
 
 # What would we like to see
 The coding challenge will test your skills to convert functional requirements into a technical solution, taking into account things that are not explicitly mentioned (just like a real life situation where the stakeholder does not exactly know what he/she wants).    
@@ -12,11 +13,14 @@ It is important to note that we would like to see different skills. We don't wan
 # The code
 This repository contains a simple web API that has some endpoints that are not (fully) implemented. You are free to do anything you like to the solution, except for changing the contracts and endpoints of the API (as we will be running some automated tests).    
 
+### Optional Challenges
 Additionally, we have added some comments in the code indicating bugs or small challenges we would like to solve. Please don't remove the comment, but you can do anything underneath it to solve the bug. Additionally, please provide what you think the problem was and why you think your change solved it.    
 
 Example:   
 "// TODO-001: Challenge: Something is wrong with this code. What is it and how can you solve it"  
 "// Answer: We are looping over the same array twice, while we could have done it once. Looping over it twice is neglectable, but still, looping once is faster."
+
+Note that this is an optional step. If you don't have time to do it, try to just write a little bit of an explanation of what you think the problem is and how you would solve it.
 
 # Functional requirements
 I have a successful online ordering system where I sell products.  
