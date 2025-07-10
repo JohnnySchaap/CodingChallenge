@@ -1,6 +1,7 @@
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
+using CodingChallenge.WebApi.AuthenticationModule;
 using CodingChallenge.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,15 +45,26 @@ public class CouponsController : ControllerBase
         var data = await System.IO.File.ReadAllTextAsync(DataFileName);
         var coupons = JsonSerializer.Deserialize<List<Coupon>>(data);
 
-        var httpClient = new HttpClient();
+        var httpClient = new HttpClient
+        {
+            DefaultRequestHeaders =
+            {
+                {
+                    AuthenticationConstants.ApiKeyHeaderName,
+                    Request.Headers[AuthenticationConstants.ApiKeyHeaderName].ToString()
+                }
+            }
+        };
         foreach (var coupon in coupons)
         {
-            var url = Url.Action(nameof(CreateOrUpdateCoupon), "Coupons", new { id = coupon.Id }, HttpContext.Request.Scheme,
+            var url = Url.Action(nameof(CreateOrUpdateCoupon), "Coupons", new { id = coupon.Id },
+                HttpContext.Request.Scheme,
                 HttpContext.Request.Host.Value);
             var body = new StringContent(JsonSerializer.Serialize(coupon), Encoding.UTF8,
                 MediaTypeNames.Application.Json);
 
-            await httpClient.PutAsync(url, body);
+            var response = await httpClient.PutAsync(url, body);
+            response.EnsureSuccessStatusCode();
         }
     }
 

@@ -1,3 +1,4 @@
+using CodingChallenge.WebApi.AuthenticationModule;
 using Microsoft.OpenApi.Models;
 
 namespace CodingChallenge.WebApi;
@@ -10,25 +11,22 @@ public sealed class Program
             .CreateBuilder(args);
 
         // Add services to the container.
-
-        builder
-            .Services
-            .AddControllers();
+        var services = builder.Services;
+        services.AddApiKeyAuthentication(builder.Configuration);
+        services.AddControllers();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-        builder
-            .Services
-            .AddEndpointsApiExplorer();
-        builder
-            .Services.AddSwaggerGen(c =>
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Coupon", Version = "v1" });
+                // TODO: Move ApiKey declaration to AuthenticationModule
                 c.AddSecurityDefinition("ApiKey",
                     new OpenApiSecurityScheme
                     {
                         Description = "ApiKey must appear in header",
                         Type = SecuritySchemeType.ApiKey,
-                        Name = "X-API-KEY",
+                        Name = AuthenticationConstants.ApiKeyHeaderName,
                         In = ParameterLocation.Header,
                         Scheme = "ApiKeyScheme"
                     });
@@ -49,6 +47,8 @@ public sealed class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+        app.UseApiKeyAuthentication();
 
         app.UseHttpsRedirection();
 
