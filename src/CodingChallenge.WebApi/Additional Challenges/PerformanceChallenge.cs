@@ -1,19 +1,7 @@
-﻿using CodingChallenge.WebApi.Models;
+﻿namespace CodingChallenge.WebApi.Additional_Challenges;
 
-namespace CodingChallenge.WebApi.Additional_Challenges;
-
-public class PerformanceChallenge
+public class PerformanceChallenge(IPerformanceChallengeRepository repo)
 {
-    private readonly IPerformanceChallengeRepository _repo;
-
-    public PerformanceChallenge(IPerformanceChallengeRepository repo)
-    {
-        _repo = repo;
-    }
-
-    // TODO-001: Challenge: This code is really slow. Can you refactor it in such a way that it is much faster?
-    // TODO-002: Challenge: Can you write unit tests that test all possible scenarios.
-
     /// <summary>
     /// Counts coupons that have at least one unique product code (not used by other coupons)
     /// Example: 
@@ -28,20 +16,26 @@ public class PerformanceChallenge
     /// <returns>Returns the number of coupons that have at least one unique product code</returns>
     public int CountCouponsWithUniqueProductCodes()
     {
-        var coupons = _repo.GetAll();
+        var coupons = repo.GetAll().ToList(); // Materialize once to avoid multiple enumeration
+        if (coupons.Count == 0) return 0;
+        if (coupons.Count == 1) return 1; // Single coupon always has unique codes
 
-        var result = 0;
+        // Build a frequency map of all product codes (case-insensitive)
+        var productCodeFrequency = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var coupon1 in coupons)
+        foreach (var coupon in coupons)
         {
-            var productCodes = coupon1.ProductCodes.ToList();
-
-            foreach (var coupon2 in coupons.Where(x => x != coupon1))
+            foreach (var productCode in coupon.ProductCodes.Distinct(StringComparer.OrdinalIgnoreCase))
             {
-                productCodes.RemoveAll(x => coupon2.ProductCodes.Contains(x, StringComparer.OrdinalIgnoreCase));
+                productCodeFrequency[productCode] = productCodeFrequency.GetValueOrDefault(productCode, 0) + 1;
             }
+        }
 
-            if (productCodes.Any())
+        // Count coupons that have at least one unique product code
+        var result = 0;
+        foreach (var coupon in coupons)
+        {
+            if (coupon.ProductCodes.Any(code => productCodeFrequency[code] == 1))
             {
                 result++;
             }
