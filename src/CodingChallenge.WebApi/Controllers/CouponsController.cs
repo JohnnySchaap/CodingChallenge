@@ -2,30 +2,33 @@ using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
 using CodingChallenge.WebApi.AuthenticationModule;
-using CodingChallenge.WebApi.Models;
+using CodingChallenge.WebApi.CouponModule;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CodingChallenge.WebApi.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class CouponsController : ControllerBase
+public class CouponsController(ICouponService couponService) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<Coupon>> GetCouponByCouponCode(string couponCode)
     {
-        return Ok(new Coupon(Guid.NewGuid(), "Name", "Description", couponCode, 10.1m, 1, 1, new[] { "AA", "BB" }));
+        // TODO: Validate input, throw corresponding errors
+        return Ok(await couponService.GetCoupon(couponCode));
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Coupon>> GetCoupon(Guid id)
     {
-        return Ok(new Coupon(id, "Name", "Description", "123", 10.1m, 1, 1, new[] { "AA", "BB" }));
+        return Ok(await couponService.GetCoupon(id));
     }
 
     [HttpPut("{id}")]
     public async Task<ActionResult> CreateOrUpdateCoupon(Guid id, [FromBody] Coupon request)
     {
+        // TODO: Validate input, throw corresponding errors
+        await couponService.CreateOrUpdateCoupon(request with { Id = id });
         return Ok();
     }
 

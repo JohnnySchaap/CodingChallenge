@@ -1,4 +1,5 @@
 using CodingChallenge.WebApi.AuthenticationModule;
+using CodingChallenge.WebApi.CouponModule;
 using Microsoft.OpenApi.Models;
 
 namespace CodingChallenge.WebApi;
@@ -13,6 +14,7 @@ public sealed class Program
         // Add services to the container.
         var services = builder.Services;
         services.AddApiKeyAuthentication(builder.Configuration);
+        services.AddCoupon(builder.Configuration);
         services.AddControllers();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -49,6 +51,8 @@ public sealed class Program
         }
 
         app.UseApiKeyAuthentication();
+
+        app.UseCoupon();
 
         app.UseHttpsRedirection();
 
