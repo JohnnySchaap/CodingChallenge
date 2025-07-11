@@ -2,6 +2,9 @@
 
 namespace CodingChallenge.WebApi.CouponModule;
 
+// TODO: Extract mapper to own class, cover by tests
+// TODO: Add logs to be able to investigate PROD issues
+
 public class CouponService(ICouponRepository repository) : ICouponService
 {
     public async Task CreateOrUpdateCoupon(Coupon coupon)
@@ -52,6 +55,36 @@ public class CouponService(ICouponRepository repository) : ICouponService
         }
 
         return products;
+    }
+
+    public async Task<bool> CanUseCoupon(string couponCode)
+    {
+        var coupon = await repository.GetByIdAsync(couponCode);
+        return coupon != null && CanUseCoupon(coupon);
+    }
+
+    public async Task<bool> ApplyCoupon(string couponCode)
+    {
+        var coupon = await repository.GetByIdAsync(couponCode);
+        if (coupon == null || !CanUseCoupon(coupon))
+            return false;
+
+        coupon.Usages++;
+        var updated = await repository.SaveChangesAsync();
+        var isApplied = updated > 0;
+        return isApplied;
+    }
+
+    private static bool CanUseCoupon(CouponEntity coupon)
+    {
+        // MaxUsages = 0 means unlimited usage
+        if (coupon.MaxUsages == 0)
+        {
+            return true; // Can always be used
+        }
+
+        // For limited usage coupons, check if usage count is less than max
+        return coupon.Usages < coupon.MaxUsages;
     }
 
     private static void MapDtoToEntity(Coupon dto, CouponEntity entity)

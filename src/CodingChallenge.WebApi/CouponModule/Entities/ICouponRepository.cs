@@ -9,5 +9,5 @@ public interface ICouponRepository
     Task<List<ProductEntity>> GetProductsByCodesAsync(List<string> productCodes);
     void AddCoupon(CouponEntity coupon);
     void AddProduct(ProductEntity product);
-    Task SaveChangesAsync();
+    Task<int> SaveChangesAsync();
 }

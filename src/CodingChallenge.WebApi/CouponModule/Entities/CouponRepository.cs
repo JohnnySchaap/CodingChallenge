@@ -45,8 +45,8 @@ public class CouponRepository(CouponDbContext context) : ICouponRepository
         context.Products.Add(product);
     }
 
-    public async Task SaveChangesAsync()
+    public async Task<int> SaveChangesAsync()
     {
-        await context.SaveChangesAsync();
+        return await context.SaveChangesAsync();
     }
 }

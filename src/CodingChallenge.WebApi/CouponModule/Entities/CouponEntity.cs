@@ -1,5 +1,7 @@
 ﻿namespace CodingChallenge.WebApi.CouponModule.Entities;
 
+// TODO: Implement optimistic blocking via RowVersion for concurrency cases
+
 public class CouponEntity
 {
     public string Id { get; set; }
@@ -10,4 +12,5 @@ public class CouponEntity
     public int MaxUsages { get; set; }
     public int Usages { get; set; }
     public List<ProductEntity> Products { get; set; }
+    // [Timestamp] public byte[] RowVersion { get; set; }
 }

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CodingChallenge.WebApi.Controllers;
 
+// TODO: Add Swagger documentation via XML doc so downstream service devs can integrate easier 
+
 [ApiController]
 [Route("[controller]")]
 public class CouponsController(ICouponService couponService) : ControllerBase
@@ -24,10 +26,33 @@ public class CouponsController(ICouponService couponService) : ControllerBase
         return Ok(await couponService.GetCoupon(id));
     }
 
+    [HttpGet("{couponCode}/availability")]
+    public async Task<ActionResult<Coupon>> CanUseCoupon(string couponCode)
+    {
+        // TODO: Add product validation by the couponCode
+        return Ok(await couponService.CanUseCoupon(couponCode));
+    }
+
+    [HttpPost("{couponCode}/usage")]
+    public async Task<ActionResult<Coupon>> ApplyCoupon(string couponCode)
+    {
+        // TODO: Add product validation by the couponCode
+        return Ok(await couponService.ApplyCoupon(couponCode));
+    }
+
+    [HttpDelete("{couponCode}/usage")]
+    public Task<ActionResult<Coupon>> DecrementCoupon(string couponCode)
+    {
+        // TODO: Implement
+        // TODO: Consider to split to 2 methods to distinguish multiple use cases: rollback, marketing adjustment
+        throw new NotImplementedException();
+    }
+
     [HttpPut("{id}")]
     public async Task<ActionResult> CreateOrUpdateCoupon(Guid id, [FromBody] Coupon request)
     {
         // TODO: Validate input, throw corresponding errors
+        // TODO: Consider to introduce PATCH method for partial updates, e.g. Description only
         await couponService.CreateOrUpdateCoupon(request with { Id = id });
         return Ok();
     }

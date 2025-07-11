@@ -383,6 +383,388 @@ public class CouponServiceIntegrationTests : IDisposable
         Assert.Contains(products, p => p.Id == "unique2");
     }
 
+    [Fact]
+    public async Task CanUseCoupon_ShouldReturnTrue_WhenCouponExistsAndHasUnlimitedUsage()
+    {
+        // Arrange
+        var couponCode = "UNLIMITED123";
+        var coupon = new Coupon(
+            Id: Guid.NewGuid(),
+            Name: "Unlimited Coupon",
+            Description: "Test Description",
+            CouponCode: couponCode,
+            Price: 10.00m,
+            MaxUsages: 0, // Unlimited usage
+            Usages: 0,
+            ProductCodes: new[] { "PROD1" }
+        );
+
+        await _couponService.CreateOrUpdateCoupon(coupon);
+
+        // Act
+        var result = await _couponService.CanUseCoupon(couponCode);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public async Task CanUseCoupon_ShouldReturnTrue_WhenCouponExistsAndHasRemainingUsages()
+    {
+        // Arrange
+        var couponCode = "LIMITED123";
+        var coupon = new Coupon(
+            Id: Guid.NewGuid(),
+            Name: "Limited Coupon",
+            Description: "Test Description",
+            CouponCode: couponCode,
+            Price: 10.00m,
+            MaxUsages: 5,
+            Usages: 0,
+            ProductCodes: new[] { "PROD1" }
+        );
+
+        await _couponService.CreateOrUpdateCoupon(coupon);
+
+        // Set current usage to 3 (less than max of 5)
+        var entity = await _context.Coupons.FirstAsync(c => c.Id == couponCode.ToLower());
+        entity.Usages = 3;
+        await _context.SaveChangesAsync();
+
+        // Act
+        var result = await _couponService.CanUseCoupon(couponCode);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public async Task CanUseCoupon_ShouldReturnFalse_WhenCouponExistsButHasReachedMaxUsages()
+    {
+        // Arrange
+        var couponCode = "EXHAUSTED123";
+        var coupon = new Coupon(
+            Id: Guid.NewGuid(),
+            Name: "Exhausted Coupon",
+            Description: "Test Description",
+            CouponCode: couponCode,
+            Price: 10.00m,
+            MaxUsages: 3,
+            Usages: 0,
+            ProductCodes: new[] { "PROD1" }
+        );
+
+        await _couponService.CreateOrUpdateCoupon(coupon);
+
+        // Set current usage to max (3)
+        var entity = await _context.Coupons.FirstAsync(c => c.Id == couponCode.ToLower());
+        entity.Usages = 3;
+        await _context.SaveChangesAsync();
+
+        // Act
+        var result = await _couponService.CanUseCoupon(couponCode);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public async Task CanUseCoupon_ShouldReturnFalse_WhenCouponDoesNotExist()
+    {
+        // Act
+        var result = await _couponService.CanUseCoupon("NONEXISTENT");
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public async Task CanUseCoupon_ShouldBeCaseInsensitive()
+    {
+        // Arrange
+        var couponCode = "CASE123";
+        var coupon = new Coupon(
+            Id: Guid.NewGuid(),
+            Name: "Case Test Coupon",
+            Description: "Test Description",
+            CouponCode: couponCode,
+            Price: 10.00m,
+            MaxUsages: 5,
+            Usages: 0,
+            ProductCodes: new[] { "PROD1" }
+        );
+
+        await _couponService.CreateOrUpdateCoupon(coupon);
+
+        // Act & Assert
+        Assert.True(await _couponService.CanUseCoupon("CASE123"));
+        Assert.True(await _couponService.CanUseCoupon("case123"));
+        Assert.True(await _couponService.CanUseCoupon("Case123"));
+        Assert.True(await _couponService.CanUseCoupon("cAsE123"));
+    }
+
+    [Fact]
+    public async Task ApplyCoupon_ShouldReturnTrue_WhenCouponExistsAndCanBeUsed()
+    {
+        // Arrange
+        var couponCode = "APPLY123";
+        var coupon = new Coupon(
+            Id: Guid.NewGuid(),
+            Name: "Apply Test Coupon",
+            Description: "Test Description",
+            CouponCode: couponCode,
+            Price: 10.00m,
+            MaxUsages: 5,
+            Usages: 0,
+            ProductCodes: new[] { "PROD1" }
+        );
+
+        await _couponService.CreateOrUpdateCoupon(coupon);
+
+        // Act
+        var result = await _couponService.ApplyCoupon(couponCode);
+
+        // Assert
+        Assert.True(result);
+
+        // Verify current usage was incremented
+        var entity = await _context.Coupons.FirstAsync(c => c.Id == couponCode.ToLower());
+        Assert.Equal(1, entity.Usages);
+    }
+
+    [Fact]
+    public async Task ApplyCoupon_ShouldReturnFalse_WhenCouponDoesNotExist()
+    {
+        // Act
+        var result = await _couponService.ApplyCoupon("NONEXISTENT");
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public async Task ApplyCoupon_ShouldReturnFalse_WhenCouponCannotBeUsed()
+    {
+        // Arrange
+        var couponCode = "EXHAUSTED456";
+        var coupon = new Coupon(
+            Id: Guid.NewGuid(),
+            Name: "Exhausted Coupon",
+            Description: "Test Description",
+            CouponCode: couponCode,
+            Price: 10.00m,
+            MaxUsages: 2,
+            Usages: 0,
+            ProductCodes: new[] { "PROD1" }
+        );
+
+        await _couponService.CreateOrUpdateCoupon(coupon);
+
+        // Set current usage to max
+        var entity = await _context.Coupons.FirstAsync(c => c.Id == couponCode.ToLower());
+        entity.Usages = 2;
+        await _context.SaveChangesAsync();
+
+        // Act
+        var result = await _couponService.ApplyCoupon(couponCode);
+
+        // Assert
+        Assert.False(result);
+
+        // Verify current usage was not incremented
+        var updatedEntity = await _context.Coupons.FirstAsync(c => c.Id == couponCode.ToLower());
+        Assert.Equal(2, updatedEntity.Usages);
+    }
+
+    [Fact]
+    public async Task ApplyCoupon_ShouldIncrementUsageCountCorrectly()
+    {
+        // Arrange
+        var couponCode = "INCREMENT123";
+        var coupon = new Coupon(
+            Id: Guid.NewGuid(),
+            Name: "Increment Test Coupon",
+            Description: "Test Description",
+            CouponCode: couponCode,
+            Price: 10.00m,
+            MaxUsages: 5,
+            Usages: 0,
+            ProductCodes: new[] { "PROD1" }
+        );
+
+        await _couponService.CreateOrUpdateCoupon(coupon);
+
+        // Act - Apply coupon multiple times
+        Assert.True(await _couponService.ApplyCoupon(couponCode));
+        Assert.True(await _couponService.ApplyCoupon(couponCode));
+        Assert.True(await _couponService.ApplyCoupon(couponCode));
+
+        // Assert
+        var entity = await _context.Coupons.FirstAsync(c => c.Id == couponCode.ToLower());
+        Assert.Equal(3, entity.Usages);
+    }
+
+    [Fact]
+    public async Task ApplyCoupon_ShouldWorkWithUnlimitedUsageCoupon()
+    {
+        // Arrange
+        var couponCode = "UNLIMITED456";
+        var coupon = new Coupon(
+            Id: Guid.NewGuid(),
+            Name: "Unlimited Coupon",
+            Description: "Test Description",
+            CouponCode: couponCode,
+            Price: 10.00m,
+            MaxUsages: 0, // Unlimited
+            Usages: 0,
+            ProductCodes: new[] { "PROD1" }
+        );
+
+        await _couponService.CreateOrUpdateCoupon(coupon);
+
+        // Act - Apply coupon multiple times
+        Assert.True(await _couponService.ApplyCoupon(couponCode));
+        Assert.True(await _couponService.ApplyCoupon(couponCode));
+        Assert.True(await _couponService.ApplyCoupon(couponCode));
+        Assert.True(await _couponService.ApplyCoupon(couponCode));
+        Assert.True(await _couponService.ApplyCoupon(couponCode));
+
+        // Assert
+        var entity = await _context.Coupons.FirstAsync(c => c.Id == couponCode.ToLower());
+        Assert.Equal(5, entity.Usages);
+    }
+
+    [Fact]
+    public async Task ApplyCoupon_ShouldBeCaseInsensitive()
+    {
+        // Arrange
+        var couponCode = "CASEAPPLY123";
+        var coupon = new Coupon(
+            Id: Guid.NewGuid(),
+            Name: "Case Apply Test Coupon",
+            Description: "Test Description",
+            CouponCode: couponCode,
+            Price: 10.00m,
+            MaxUsages: 5,
+            Usages: 0,
+            ProductCodes: new[] { "PROD1" }
+        );
+
+        await _couponService.CreateOrUpdateCoupon(coupon);
+
+        // Act
+        var result = await _couponService.ApplyCoupon("caseapply123");
+
+        // Assert
+        Assert.True(result);
+
+        // Verify current usage was incremented
+        var entity = await _context.Coupons.FirstAsync(c => c.Id == couponCode.ToLower());
+        Assert.Equal(1, entity.Usages);
+    }
+
+    [Fact]
+    public async Task ApplyCoupon_ShouldStopAtMaxUsages()
+    {
+        // Arrange
+        var couponCode = "MAXTEST123";
+        var coupon = new Coupon(
+            Id: Guid.NewGuid(),
+            Name: "Max Usage Test Coupon",
+            Description: "Test Description",
+            CouponCode: couponCode,
+            Price: 10.00m,
+            MaxUsages: 3,
+            Usages: 0,
+            ProductCodes: new[] { "PROD1" }
+        );
+
+        await _couponService.CreateOrUpdateCoupon(coupon);
+
+        // Act - Apply coupon up to max usage
+        Assert.True(await _couponService.ApplyCoupon(couponCode));
+        Assert.True(await _couponService.ApplyCoupon(couponCode));
+        Assert.True(await _couponService.ApplyCoupon(couponCode));
+
+        // Now it should fail
+        Assert.False(await _couponService.ApplyCoupon(couponCode));
+
+        // Assert
+        var entity = await _context.Coupons.FirstAsync(c => c.Id == couponCode.ToLower());
+        Assert.Equal(3, entity.Usages);
+    }
+
+    [Fact]
+    public async Task CanUseCoupon_And_ApplyCoupon_ShouldWorkTogether()
+    {
+        // Arrange
+        var couponCode = "COMBINED123";
+        var coupon = new Coupon(
+            Id: Guid.NewGuid(),
+            Name: "Combined Test Coupon",
+            Description: "Test Description",
+            CouponCode: couponCode,
+            Price: 10.00m,
+            MaxUsages: 2,
+            Usages: 0,
+            ProductCodes: new[] { "PROD1" }
+        );
+
+        await _couponService.CreateOrUpdateCoupon(coupon);
+
+        // Act & Assert - Initial state
+        Assert.True(await _couponService.CanUseCoupon(couponCode));
+        Assert.True(await _couponService.ApplyCoupon(couponCode));
+
+        // After first application
+        Assert.True(await _couponService.CanUseCoupon(couponCode));
+        Assert.True(await _couponService.ApplyCoupon(couponCode));
+
+        // After second application (max reached)
+        Assert.False(await _couponService.CanUseCoupon(couponCode));
+        Assert.False(await _couponService.ApplyCoupon(couponCode));
+
+        // Verify final state
+        var entity = await _context.Coupons.FirstAsync(c => c.Id == couponCode.ToLower());
+        Assert.Equal(2, entity.Usages);
+    }
+
+    [Fact]
+    public async Task ConcurrentApplyCoupon_ShouldHandleRaceCondition()
+    {
+        // Arrange
+        var couponCode = "CONCURRENT123";
+        var coupon = new Coupon(
+            Id: Guid.NewGuid(),
+            Name: "Concurrent Test Coupon",
+            Description: "Test Description",
+            CouponCode: couponCode,
+            Price: 10.00m,
+            MaxUsages: 1,
+            Usages: 0,
+            ProductCodes: new[] { "PROD1" }
+        );
+
+        await _couponService.CreateOrUpdateCoupon(coupon);
+
+        // Act - Simulate concurrent applications
+        var tasks = new List<Task<bool>>();
+        for (var i = 0; i < 100; i++)
+        {
+            tasks.Add(_couponService.ApplyCoupon(couponCode));
+        }
+
+        var results = await Task.WhenAll(tasks);
+
+        // Assert - Only one should succeed
+        var successCount = results.Count(r => r);
+        Assert.True(successCount <= 1, $"Expected at most 1 success, but got {successCount}");
+
+        // Verify final state
+        var entity = await _context.Coupons.FirstAsync(c => c.Id == couponCode.ToLower());
+        Assert.True(entity.Usages <= 1, $"Expected CurrentUsages <= 1, but got {entity.Usages}");
+    }
+
     public void Dispose()
     {
         _context.Database.EnsureDeleted();
